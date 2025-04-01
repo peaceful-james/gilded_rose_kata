@@ -2,13 +2,6 @@ defmodule GildedRoseTest do
   use ExUnit.Case
   alias GildedRose.TextTestFixture
 
-  test "begin the journey of refactoring" do
-    items = [%Item{name: "foo", sell_in: 0, quality: 0}]
-    GildedRose.update_quality(items)
-    %{name: firstItemName} = List.first(items)
-    assert "fixme" == firstItemName
-  end
-
   describe "bulk black-box test" do
     test "has not broken" do
       items = TextTestFixture.assorted_items()
