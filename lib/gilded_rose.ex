@@ -36,29 +36,20 @@ defmodule GildedRose do
   end
 
   def update_item(:normal, item) do
-    increment_by = if item.sell_in <= 0, do: -2, else: -1
-
-    item
-    |> increment_item_value_if_quality_less_than_threshold(increment_by)
+    :normal
+    |> maybe_change_item_quality(item)
     |> decrement_sell_in()
   end
 
   def update_item(:aged_brie, item) do
-    item
-    |> increment_item_value_if_quality_less_than_threshold(1)
+    :aged_brie
+    |> maybe_change_item_quality(item)
     |> decrement_sell_in()
   end
 
   def update_item(:backstage_pass, %{sell_in: sell_in} = item) when sell_in > 0 do
-    increment_by =
-      cond do
-        item.sell_in < 11 and item.sell_in >= 6 -> 2
-        item.sell_in < 6 and item.sell_in > 0 -> 3
-        true -> 1
-      end
-
-    item
-    |> increment_item_value_if_quality_less_than_threshold(increment_by)
+    :backstage_pass
+    |> maybe_change_item_quality(item)
     |> decrement_sell_in()
   end
 
@@ -72,14 +63,47 @@ defmodule GildedRose do
   end
 
   def update_item(:conjured, item) do
-    increment_by = if item.sell_in > 0, do: -2, else: -4
-
-    item
-    |> increment_item_value_if_quality_less_than_threshold(increment_by)
+    :conjured
+    |> maybe_change_item_quality(item)
     |> decrement_sell_in()
   end
 
-  defp increment_item_value_if_quality_less_than_threshold(item, increment_value, opts \\ []) do
+  @type quality_diff_opts :: [
+          {:max_quality, non_neg_integer()},
+          {:min_quality, non_neg_integer()}
+        ]
+  @spec maybe_change_item_quality(item_category(), item(), quality_diff_opts()) :: item()
+  defp maybe_change_item_quality(category, item, opts \\ []) do
+    increment_by = infer_items_daily_quality_diff(category, item)
+    increment_item_value_if_quality_less_than_threshold(item, increment_by, opts)
+  end
+
+  defp infer_items_daily_quality_diff(:normal, item) do
+    if item.sell_in <= 0, do: -2, else: -1
+  end
+
+  defp infer_items_daily_quality_diff(:aged_brie, _item) do
+    1
+  end
+
+  defp infer_items_daily_quality_diff(:backstage_pass, %{sell_in: sell_in} = item) when sell_in > 0 do
+    cond do
+      item.sell_in < 11 and item.sell_in >= 6 -> 2
+      item.sell_in < 6 and item.sell_in > 0 -> 3
+      true -> 1
+    end
+  end
+
+  defp infer_items_daily_quality_diff(:sulfuras, _item) do
+    0
+  end
+
+  defp infer_items_daily_quality_diff(:conjured, item) do
+    if item.sell_in > 0, do: -2, else: -4
+  end
+
+  @spec increment_item_value_if_quality_less_than_threshold(item(), integer(), quality_diff_opts()) :: item()
+  defp increment_item_value_if_quality_less_than_threshold(item, increment_value, opts) do
     max_quality = Keyword.get(opts, :max_quality, @default_max_quality)
     min_quality = Keyword.get(opts, :min_quality, @default_min_quality)
 
