@@ -33,6 +33,11 @@ defmodule GildedRoseTest do
       %{item: TextTestFixture.normal_item()}
     end
 
+    test "sell_in decreases to 9", %{item: item} do
+      assert [%Item{sell_in: updated_sell_in}] = GildedRose.update_quality([item])
+      assert updated_sell_in == 9
+    end
+
     test "decreases in quality by 1 after 1 day when sell_in > 0", %{item: item} do
       assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 5}])
       assert updated_quality == item.quality - 1
@@ -41,6 +46,12 @@ defmodule GildedRoseTest do
     test "decreases in quality by 2 after 1 day when sell_in <= 0", %{item: item} do
       assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 0}])
       assert updated_quality == item.quality - 2
+    end
+
+    test "can not decrease in quality below 0", %{item: item} do
+      mix_quality = 0
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | quality: 0}])
+      assert updated_quality == mix_quality
     end
   end
 
@@ -58,6 +69,11 @@ defmodule GildedRoseTest do
   describe "sulfuras" do
     setup do
       %{item: TextTestFixture.sulfuras_item()}
+    end
+
+    test "sell_in does not decrease", %{item: item} do
+      assert [%Item{sell_in: updated_sell_in}] = GildedRose.update_quality([item])
+      assert updated_sell_in == item.sell_in
     end
 
     test "quality remains at 80", %{item: item} do
