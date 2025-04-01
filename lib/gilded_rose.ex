@@ -1,7 +1,11 @@
 defmodule GildedRose do
+  @moduledoc """
+  Update item quantities and sell_in at the **end** of every day.
+
   # Example
   # update_quality([%Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 9, quality: 1}])
   # => [%Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 8, quality: 3}]
+  """
 
   def update_quality(items) do
     Enum.map(items, &update_item/1)
