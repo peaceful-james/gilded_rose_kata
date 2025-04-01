@@ -9,49 +9,37 @@ defmodule GildedRose do
 
   def update_item(item) do
     item =
-      cond do
-        item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" ->
-          if item.quality > 0 do
-            if item.name != "Sulfuras, Hand of Ragnaros" do
-              %{item | quality: item.quality - 1}
-            else
-              item
+      if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" do
+        if item.quality > 0 do
+          if item.name != "Sulfuras, Hand of Ragnaros" do
+            %{item | quality: item.quality - 1}
+          else
+            item
+          end
+        else
+          item
+        end
+      else
+        if item.quality < 50 do
+          item = %{item | quality: item.quality + 1}
+
+          if item.name == "Backstage passes to a TAFKAL80ETC concert" do
+            cond do
+              item.sell_in < 11 and item.sell_in >= 6 ->
+                increment_item_value_if_quality_less_than_threshold(item, 50, 1)
+
+              item.sell_in < 6 and item.sell_in > 0 ->
+                increment_item_value_if_quality_less_than_threshold(item, 50, 2)
+
+              true ->
+                item
             end
           else
             item
           end
-
-        true ->
-          cond do
-            item.quality < 50 ->
-              item = %{item | quality: item.quality + 1}
-
-              cond do
-                item.name == "Backstage passes to a TAFKAL80ETC concert" ->
-                  item =
-                    cond do
-                      item.sell_in < 11 ->
-                        increment_item_value_if_quality_less_than_threshold(item, 50, 1)
-
-                      true ->
-                        item
-                    end
-
-                  cond do
-                    item.sell_in < 6 ->
-                      increment_item_value_if_quality_less_than_threshold(item, 50, 1)
-
-                    true ->
-                      item
-                  end
-
-                true ->
-                  item
-              end
-
-            true ->
-              item
-          end
+        else
+          item
+        end
       end
 
     item =
