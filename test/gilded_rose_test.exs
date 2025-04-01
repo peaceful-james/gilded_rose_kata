@@ -23,7 +23,7 @@ defmodule GildedRoseTest do
                %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 14, quality: 21},
                %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 9, quality: 50},
                %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 4, quality: 50},
-               %Item{name: "Conjured Mana Cake", sell_in: 2, quality: 5}
+               %Item{name: "Conjured Mana Cake", sell_in: 2, quality: 4}
              ]
     end
   end

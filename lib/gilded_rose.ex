@@ -41,8 +41,10 @@ defmodule GildedRose do
   end
 
   def update_item(%{name: "Conjured Mana Cake"} = item) do
+    increment_by = if item.sell_in > 0, do: -2, else: -4
+
     item
-    |> increment_item_value_if_quality_less_than_threshold(-1)
+    |> increment_item_value_if_quality_less_than_threshold(increment_by)
     |> decrement_sell_in()
   end
 
