@@ -31,13 +31,7 @@ defmodule GildedRose do
                   item =
                     cond do
                       item.sell_in < 11 ->
-                        cond do
-                          item.quality < 50 ->
-                            %{item | quality: item.quality + 1}
-
-                          true ->
-                            item
-                        end
+                        increment_item_value_if_quality_less_than_threshold(item, 50, 1)
 
                       true ->
                         item
@@ -45,13 +39,7 @@ defmodule GildedRose do
 
                   cond do
                     item.sell_in < 6 ->
-                      cond do
-                        item.quality < 50 ->
-                          %{item | quality: item.quality + 1}
-
-                        true ->
-                          item
-                      end
+                      increment_item_value_if_quality_less_than_threshold(item, 50, 1)
 
                     true ->
                       item
@@ -100,17 +88,19 @@ defmodule GildedRose do
             end
 
           true ->
-            cond do
-              item.quality < 50 ->
-                %{item | quality: item.quality + 1}
-
-              true ->
-                item
-            end
+            increment_item_value_if_quality_less_than_threshold(item, 50, 1)
         end
 
       true ->
         item
+    end
+  end
+
+  defp increment_item_value_if_quality_less_than_threshold(item, quality_threshold, increment_value) do
+    if item.quality < quality_threshold do
+      %{item | quality: item.quality + increment_value}
+    else
+      item
     end
   end
 end
