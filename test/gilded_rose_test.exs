@@ -27,4 +27,30 @@ defmodule GildedRoseTest do
              ]
     end
   end
+
+  describe "normal item" do
+    test "decreases in quality by 1 after 1 day when sell_in < 0"
+    test "decreases in quality by 2 after 1 day when sell_in <= 0"
+    test "cannot have quality > 50"
+  end
+
+  describe "aged brie" do
+    test "increases in quality by 1 after 1 day"
+  end
+
+  describe "sulfuras" do
+    test "quality remains at 80"
+  end
+
+  describe "backstage passes" do
+    test "increases in quality by 1 after 1 day when sell_in > 10"
+    test "increases in quality by 2 after 1 day when sell_in <= 10 and sell_in > 5"
+    test "increases in quality by 3 after 1 day when sell_in <= 5 and sell_in > 0"
+    test "quality drops to 0 after 1 day when sell_in <= 0"
+  end
+
+  describe "conjured items" do
+    test "decreases in quality by 2 after 1 day when sell_in < 0"
+    test "decreases in quality by 4 after 1 day when sell_in <= 0"
+  end
 end
