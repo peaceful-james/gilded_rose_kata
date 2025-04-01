@@ -29,28 +29,95 @@ defmodule GildedRoseTest do
   end
 
   describe "normal item" do
-    test "decreases in quality by 1 after 1 day when sell_in < 0"
-    test "decreases in quality by 2 after 1 day when sell_in <= 0"
-    test "cannot have quality > 50"
+    setup do
+      %{item: TextTestFixture.normal_item()}
+    end
+
+    test "decreases in quality by 1 after 1 day when sell_in > 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 5}])
+      assert updated_quality == item.quality - 1
+    end
+
+    test "decreases in quality by 2 after 1 day when sell_in <= 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 0}])
+      assert updated_quality == item.quality - 2
+    end
   end
 
   describe "aged brie" do
-    test "increases in quality by 1 after 1 day"
+    setup do
+      %{item: TextTestFixture.aged_brie_item()}
+    end
+
+    test "increases in quality by 1 after 1 day", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 5}])
+      assert updated_quality == item.quality + 1
+    end
   end
 
   describe "sulfuras" do
-    test "quality remains at 80"
+    setup do
+      %{item: TextTestFixture.sulfuras_item()}
+    end
+
+    test "quality remains at 80", %{item: item} do
+      assert item.quality == 80
+      assert [%Item{quality: 80}] = GildedRose.update_quality([item])
+    end
   end
 
   describe "backstage passes" do
-    test "increases in quality by 1 after 1 day when sell_in > 10"
-    test "increases in quality by 2 after 1 day when sell_in <= 10 and sell_in > 5"
-    test "increases in quality by 3 after 1 day when sell_in <= 5 and sell_in > 0"
-    test "quality drops to 0 after 1 day when sell_in <= 0"
+    setup do
+      %{item: TextTestFixture.backstage_pass_item()}
+    end
+
+    test "increases in quality by 1 after 1 day when sell_in > 10", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 15}])
+      assert updated_quality == item.quality + 1
+    end
+
+    test "increases in quality by 2 after 1 day when sell_in <= 10 and sell_in > 5", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 9}])
+      assert updated_quality == item.quality + 2
+    end
+
+    test "increases in quality by 3 after 1 day when sell_in <= 5 and sell_in > 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 3}])
+      assert updated_quality == item.quality + 3
+    end
+
+    test "quality drops to 0 after 1 day when sell_in <= 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 0}])
+      assert updated_quality == 0
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: -4}])
+      assert updated_quality == 0
+    end
+
+    test "cannot have quality > 50", %{item: item} do
+      max_quality = 50
+
+      assert [%Item{quality: updated_quality}] =
+               GildedRose.update_quality([%{item | quality: max_quality, sell_in: 15}])
+
+      assert updated_quality == max_quality
+    end
   end
 
   describe "conjured items" do
-    test "decreases in quality by 2 after 1 day when sell_in < 0"
-    test "decreases in quality by 4 after 1 day when sell_in <= 0"
+    setup do
+      %{item: TextTestFixture.conjured_item()}
+    end
+
+    test "decreases in quality by 2 after 1 day when sell_in > 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 5}])
+      assert updated_quality == item.quality - 2
+    end
+
+    test "decreases in quality by 4 after 1 day when sell_in <= 0", %{item: item} do
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: 0}])
+      assert updated_quality == item.quality - 4
+      assert [%Item{quality: updated_quality}] = GildedRose.update_quality([%{item | sell_in: -2}])
+      assert updated_quality == item.quality - 4
+    end
   end
 end

@@ -1,16 +1,22 @@
 defmodule GildedRose.TextTestFixture do
+  def normal_item, do: %Item{name: "+5 Dexterity Vest", sell_in: 10, quality: 20}
+  def aged_brie_item, do: %Item{name: "Aged Brie", sell_in: 2, quality: 0}
+  def sulfuras_item, do: %Item{name: "Sulfuras, Hand of Ragnaros", sell_in: 0, quality: 80}
+  def backstage_pass_item, do: %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 15, quality: 20}
+  def conjured_item, do: %Item{name: "Conjured Mana Cake", sell_in: 3, quality: 6}
+
   def assorted_items do
     [
-      %Item{name: "+5 Dexterity Vest", sell_in: 10, quality: 20},
-      %Item{name: "Aged Brie", sell_in: 2, quality: 0},
+      normal_item(),
+      aged_brie_item(),
       %Item{name: "Elixir of the Mongoose", sell_in: 5, quality: 7},
-      %Item{name: "Sulfuras, Hand of Ragnaros", sell_in: 0, quality: 80},
+      sulfuras_item(),
       %Item{name: "Sulfuras, Hand of Ragnaros", sell_in: -1, quality: 80},
-      %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 15, quality: 20},
+      backstage_pass_item(),
       %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 10, quality: 49},
       %Item{name: "Backstage passes to a TAFKAL80ETC concert", sell_in: 5, quality: 49},
       # This Conjured item does not work properly yet
-      %Item{name: "Conjured Mana Cake", sell_in: 3, quality: 6}
+      conjured_item()
     ]
   end
 
