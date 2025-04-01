@@ -11,6 +11,7 @@ defmodule GildedRose do
   @type item :: struct()
 
   @item_categories [:aged_brie, :backstage_pass, :conjured_item, :normal, :sulfuras]
+  # @type item_category :: :aged_brie | :backstage_pass | :conju... etc
   @type item_category :: unquote(Enum.reduce(@item_categories, &{:|, [], [&1, &2]}))
 
   @default_min_quality 0
