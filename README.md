@@ -10,7 +10,7 @@ we can begin selling a new category of items. First an introduction to our syste
 
 - All `items` have a `SellIn` value which denotes the number of days we have to sell the `items`
 - All `items` have a `Quality` value which denotes how valuable the item is
-- At the end of each day our system lowers both values for every item
+- At the end of each day our system lowers both values for every item (by 1).
 
 Pretty simple, right? Well this is where it gets interesting:
 
@@ -18,9 +18,9 @@ Pretty simple, right? Well this is where it gets interesting:
 - The `Quality` of an item is never negative
 - __"Aged Brie"__ actually increases in `Quality` the older it gets
 - The `Quality` of an item is never more than `50`
-- __"Sulfuras"__, being a legendary item, never has to be sold or decreases in `Quality`
-- __"Backstage passes"__, like aged brie, increases in `Quality` as its `SellIn` value approaches;
-	- `Quality` increases by `2` when there are `10` days or less and by `3` when there are `5` days or less but
+- __"Sulfuras"__, being a legendary item, never has to be sold and never decreases in `Quality`.Its quality is always 80.
+- __"Backstage passes"__, like aged brie, increases in `Quality` as its `SellIn` value approaches 0;
+	- `Quality` increases (each day) by `2` when there are `10` days or less and by `3` when there are `5` days or less but
 	- `Quality` drops to `0` after the concert
 
 We have recently signed a supplier of conjured items. This requires an update to our system:
